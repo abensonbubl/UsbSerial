@@ -3,6 +3,7 @@ package com.felhr.usbserial;
 import com.felhr.deviceids.CH34xIds;
 import com.felhr.deviceids.CP210xIds;
 import com.felhr.deviceids.FTDISioIds;
+import com.felhr.deviceids.PL2303GIds;
 import com.felhr.deviceids.PL2303Ids;
 
 import android.annotation.TargetApi;
@@ -20,6 +21,7 @@ public abstract class UsbSerialDevice implements UsbSerialInterface
     public static final String CP210x = "cp210x";
     public static final String FTDI = "ftdi";
     public static final String PL2303 = "pl2303";
+    public static final String PL2303G = "pl2303G";
 
     protected static final String COM_PORT = "COM ";
 
@@ -77,6 +79,8 @@ public abstract class UsbSerialDevice implements UsbSerialInterface
             return new FTDISerialDevice(device, connection, iface);
         else if(CP210xIds.isDeviceSupported(vid, pid))
             return new CP2102SerialDevice(device, connection, iface);
+        else if(PL2303GIds.isDeviceSupported(vid, pid))
+            return new PL2303GSerialDevice(device, connection, iface);
         else if(PL2303Ids.isDeviceSupported(vid, pid))
             return new PL2303SerialDevice(device, connection, iface);
         else if(CH34xIds.isDeviceSupported(vid, pid))
@@ -92,14 +96,16 @@ public abstract class UsbSerialDevice implements UsbSerialInterface
             return new FTDISerialDevice(device, connection, iface);
         }else if(type.equals(CP210x)){
             return new CP2102SerialDevice(device, connection, iface);
-        }else if(type.equals(PL2303)){
+        }else if(type.equals(PL2303G)){
+            return new PL2303GSerialDevice(device, connection, iface);
+        }else if(type.equals(PL2303)) {
             return new PL2303SerialDevice(device, connection, iface);
         }else if(type.equals(CH34x)){
             return new CH34xSerialDevice(device, connection, iface);
         }else if(type.equals(CDC)){
             return new CDCSerialDevice(device, connection, iface);
         }else{
-            throw new IllegalArgumentException("Invalid type argument. Must be:cdc, ch34x, cp210x, ftdi or pl2303");
+            throw new IllegalArgumentException("Invalid type argument. Must be:cdc, ch34x, cp210x, ftdi, pl2303G or pl2303");
         }
     }
 
@@ -111,6 +117,8 @@ public abstract class UsbSerialDevice implements UsbSerialInterface
         if(FTDISioIds.isDeviceSupported(device))
             return true;
         else if(CP210xIds.isDeviceSupported(vid, pid))
+            return true;
+        else if(PL2303GIds.isDeviceSupported(vid, pid))
             return true;
         else if(PL2303Ids.isDeviceSupported(vid, pid))
             return true;
